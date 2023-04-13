@@ -7,8 +7,17 @@ class Section(models.TextChoices):
     BookStore = 'Book_Store', 'Book_Store'
     DrawSore = 'Draw_Store', 'Draw_Store'
 
+class BookAuth(models.Model):
+    name = models.CharField('auth_name', max_length=100)
+    email = models.EmailField('auth_email', max_length=254, null=True, blank=True)
+    phone = models.CharField('auth_phone', max_length=100)
+    number_of_book = models.IntegerField('number_of_book', default=0)
+    def __str__(self):
+        return self.name
 
 class Product(models.Model):
+    # The Relationship Between Product and Book Auth Models
+    book_auth = models.ForeignKey(BookAuth, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(verbose_name='product_name', max_length=255)
     section = models.CharField('section', max_length=100, choices=Section.choices)
     price = models.FloatField(verbose_name='product_price', default=0.0)
@@ -35,11 +44,8 @@ class Product(models.Model):
     is_active = models.BooleanField('is_active', default=True)
     is_rare = models.BooleanField('is_rare', default=False)
     is_DrawTool = models.BooleanField('is_book', default=False)
-    auth = models.ForeignKey('BookAuth', null=True, blank=True, on_delete=models.SET_NULL)
+    # auth = models.ForeignKey(BookAuth, null=True, blank=True, on_delete=models.SET_NULL)
 
+    def __str__(self):
+        return self.name
 
-class BookAuth(models.Model):
-    name = models.CharField('auth_name', max_length=100)
-    email = models.EmailField('auth_email', max_length=254, null=True, blank=True)
-    phone = models.CharField('auth_phone', max_length=100)
-    number_of_book = models.IntegerField('number_of_book', default=0)
